@@ -5,5 +5,5 @@
   "dependencies": [
     { "name": "fmt", "version>=": "10.1.1" }
   ],
-  "builtin-baseline": "7476f0d4e77d3333fbb249657df8251c28c4faae"
+  "builtin-baseline": "e140b1fde236eb682b0d47f905e65008a191800f"
 }
