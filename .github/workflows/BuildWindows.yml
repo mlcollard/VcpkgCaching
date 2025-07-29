@@ -1,0 +1,40 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest # or ubuntu-latest, macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Cache vcpkg installed and downloads folders
+      - name: Cache vcpkg installed packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}/vcpkg_installed
+            ${{ github.workspace }}/vcpkg_downloads
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+
+      # Run vcpkg (will restore from cache if possible)
+      - name: Run vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgDirectory: ${{ github.workspace }}/vcpkg
+          vcpkgJsonGlob: '**/vcpkg.json'
+          runVcpkgInstall: true
+          vcpkgCacheRoot: ${{ github.workspace }}
+          # vcpkg will use 'vcpkg_installed' and 'vcpkg_downloads' at root
+
+      # Build and run
+      - name: Configure CMake
+        run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Run
+        run: ./build/main
+        shell: bash
