@@ -9,24 +9,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Cache vcpkg installed and downloads folders
-      - name: Cache vcpkg installed packages
+      - name: Clone vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          cd vcpkg
+          git checkout e140b1fde236eb682b0d47f905e65008a191800f
+
+      - name: Cache vcpkg installed
         uses: actions/cache@v4
         with:
-          path: |
-            ${{ github.workspace }}/vcpkg_installed
-            ${{ github.workspace }}/vcpkg_downloads
+          path: vcpkg_installed
           key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
 
-      # Run vcpkg (will restore from cache if possible)
-      - name: Run vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgDirectory: ${{ github.workspace }}/vcpkg
-          vcpkgJsonGlob: '**/vcpkg.json'
-          runVcpkgInstall: true
-          vcpkgCacheRoot: ${{ github.workspace }}
-          # vcpkg will use 'vcpkg_installed' and 'vcpkg_downloads' at root
+      - name: Bootstrap vcpkg
+        run: .\vcpkg\bootstrap-vcpkg.bat
+
+      - name: Install dependencies
+        run: .\vcpkg\vcpkg.exe install --x-install-root=${{ github.workspace }}\vcpkg_installed
 
       # Build and run
       - name: Configure CMake
