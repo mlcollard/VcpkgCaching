@@ -9,11 +9,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Clone vcpkg
+      - name: Shallow fetch vcpkg at specific commit
         run: |
-          git clone https://github.com/microsoft/vcpkg.git
+          git init vcpkg
           cd vcpkg
-          git checkout e140b1fde236eb682b0d47f905e65008a191800f
+          git remote add origin https://github.com/microsoft/vcpkg.git
+          git fetch --depth 1 origin e140b1fde236eb682b0d47f905e65008a191800f
+          git checkout FETCH_HEAD
 
       - name: Cache vcpkg installed
         uses: actions/cache@v4
