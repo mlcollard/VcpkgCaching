@@ -9,6 +9,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: 4.0
+
+      - name: Check CMake version
+        shell: bash
+        run: cmake --version
+
       - name: Cache vcpkg binary artifacts
         uses: actions/cache@v4
         with:
