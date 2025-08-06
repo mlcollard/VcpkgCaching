@@ -23,7 +23,7 @@ jobs:
       - name: install dependencies
         shell: bash
         run:
-           export VCPKG_BINARY_SOURCES="clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite"
+          export VCPKG_BINARY_SOURCES="clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite"
           ./vcpkg/vcpkg install
 
       - name: Configure CMake with release-only triplet and vcpkg
