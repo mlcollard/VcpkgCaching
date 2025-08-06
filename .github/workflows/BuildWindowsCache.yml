@@ -9,7 +9,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: lukka/run-vcpkg@v11
+      - name: Clone vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          cd vcpkg
+          git checkout e140b1fde236eb682b0d47f905e65008a191800f
+
+      - name: Bootstrap vcpkg
+        run: ./vcpkg/bootstrap-vcpkg.sh
+
+      - name: install dependencies
+        env:
+          VCPKG_BINARY_SOURCES: clear;files,./vcpkg-cache,readwrite
+        run: ./vcpkg/vcpkg install
 
       - name: Configure CMake with release-only triplet and vcpkg
         run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
