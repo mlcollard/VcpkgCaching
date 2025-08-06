@@ -22,13 +22,13 @@ jobs:
 
       - name: install dependencies
         shell: bash
-        run:
+        run: |
           export VCPKG_BINARY_SOURCES="clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite"
           ./vcpkg/vcpkg install
 
       - name: Configure CMake with release-only triplet and vcpkg
         shell: bash
-        run:
+        run: |
           export VCPKG_BINARY_SOURCES="clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite"
           cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
 
