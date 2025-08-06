@@ -28,7 +28,8 @@ jobs:
 
       - name: Set vcpkg binary source env
         shell: bash
-        run: echo "VCPKG_BINARY_SOURCES=clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite" >> $GITHUB_ENV
+        run: |
+          echo 'VCPKG_BINARY_SOURCES=clear;files,'"${GITHUB_WORKSPACE}"'/vcpkg-cache,readwrite' >> "$GITHUB_ENV"
 
       - name: Clone vcpkg
         shell: bash
