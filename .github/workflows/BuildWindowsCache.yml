@@ -10,9 +10,6 @@ jobs:
         uses: actions/checkout@v4
 
       - uses: lukka/run-vcpkg@v11
-        with:
-          cache: true
-          triplet: x64-windows
 
       - name: Configure CMake with release-only triplet and vcpkg
         run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
