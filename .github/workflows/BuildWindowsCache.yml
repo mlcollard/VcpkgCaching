@@ -26,11 +26,6 @@ jobs:
           restore-keys: |
             vcpkg-cache-${{ runner.os }}-
 
-      - name: Set vcpkg binary source env
-        shell: bash
-        run: |
-          echo 'VCPKG_BINARY_SOURCES=clear;files,'"${GITHUB_WORKSPACE}"'/vcpkg-cache,readwrite' >> "$GITHUB_ENV"
-
       - name: Clone vcpkg
         shell: bash
         run: |
@@ -45,7 +40,9 @@ jobs:
 
       - name: Configure CMake with vcpkg
         shell: bash
-        run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$(cygpath -u "$GITHUB_WORKSPACE")/vcpkg/scripts/buildsystems/vcpkg.cmake
+        run: |
+          export VCPKG_BINARY_SOURCES="clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite"
+          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$(cygpath -u "$GITHUB_WORKSPACE")/vcpkg/scripts/buildsystems/vcpkg.cmake
 
       - name: Build
         shell: bash
