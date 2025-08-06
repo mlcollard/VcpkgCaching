@@ -32,7 +32,7 @@ jobs:
         run: .\vcpkg\bootstrap-vcpkg.bat
 
       - name: Install dependencies in custom directory for cache purposes
-        run: .\vcpkg\vcpkg.exe install --x-install-root=${{ github.workspace }}\vcpkg_installed
+        run: .\vcpkg\vcpkg.exe install --triplet x64-windows-release --x-install-root=${{ github.workspace }}\vcpkg_installed
 
       - name: Configure CMake with release-only triplet and vcpkg
         run: cmake -B build -S . -DVCPKG_TARGET_TRIPLET=x64-windows-release -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
