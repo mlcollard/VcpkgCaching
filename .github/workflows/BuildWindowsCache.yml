@@ -9,15 +9,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up CMake
-        uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: 4.0
-
-      - name: Check CMake version
-        shell: bash
-        run: cmake --version
-
       - name: Cache vcpkg binary artifacts
         uses: actions/cache@v4
         with:
@@ -25,6 +16,10 @@ jobs:
           key: vcpkg-cache-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
           restore-keys: |
             vcpkg-cache-${{ runner.os }}-
+
+      - name: Set vcpkg binary source env
+        shell: bash
+        run: echo "VCPKG_BINARY_SOURCES=clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite" >> $GITHUB_ENV
 
       - name: Clone vcpkg
         shell: bash
@@ -40,9 +35,7 @@ jobs:
 
       - name: Configure CMake with vcpkg
         shell: bash
-        run: |
-          export VCPKG_BINARY_SOURCES="clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite"
-          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$(cygpath -u "$GITHUB_WORKSPACE")/vcpkg/scripts/buildsystems/vcpkg.cmake
+        run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$(cygpath -u "$GITHUB_WORKSPACE")/vcpkg/scripts/buildsystems/vcpkg.cmake
 
       - name: Build
         shell: bash
