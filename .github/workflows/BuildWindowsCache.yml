@@ -14,6 +14,15 @@ jobs:
         with:
           vcpkg-ref: e140b1fde236eb682b0d47f905e65008a191800f
 
+      - name: Set up CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: 4.0
+
+      - name: Check CMake version
+        shell: bash
+        run: cmake --version
+
       - name: Configure CMake with vcpkg
         shell: bash
         run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$(cygpath -u "$GITHUB_WORKSPACE")/vcpkg/scripts/buildsystems/vcpkg.cmake
