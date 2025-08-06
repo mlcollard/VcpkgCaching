@@ -4,10 +4,18 @@ on: workflow_dispatch
 
 jobs:
   build:
-    runs-on: windows-latest # or ubuntu-latest, macos-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Cache vcpkg binary artifacts
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/vcpkg-cache
+          key: vcpkg-cache-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            vcpkg-cache-${{ runner.os }}-
 
       - name: Clone vcpkg
         shell: bash
@@ -18,9 +26,11 @@ jobs:
 
       - name: Bootstrap vcpkg
         shell: bash
-        run: ./vcpkg/bootstrap-vcpkg.sh
+        run: |
+          cd vcpkg
+          ./bootstrap-vcpkg.sh
 
-      - name: install dependencies
+      - name: Install dependencies
         shell: bash
         run: |
           export VCPKG_BINARY_SOURCES="clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite"
@@ -33,4 +43,5 @@ jobs:
           cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$(cygpath -u "$GITHUB_WORKSPACE")/vcpkg/scripts/buildsystems/vcpkg.cmake
 
       - name: Build
+        shell: bash
         run: cmake --build build --config Release
