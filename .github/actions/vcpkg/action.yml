@@ -27,9 +27,10 @@ runs:
     - name: Clone vcpkg
       shell: bash
       run: |
+        git config --global advice.detachedHead false
         git clone https://github.com/microsoft/vcpkg.git
         cd vcpkg
-        git checkout ${{ inputs.vcpkg-ref }}
+        git checkout --quiet ${{ inputs.vcpkg-ref }}
 
     - name: Bootstrap vcpkg
       shell: bash
