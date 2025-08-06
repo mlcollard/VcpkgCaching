@@ -9,29 +9,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache vcpkg binary artifacts
-        uses: actions/cache@v4
+      - name: Setup vcpkg
+        uses: ./.github/actions/vcpkg
         with:
-          path: ${{ github.workspace }}/vcpkg-cache
-          key: vcpkg-cache-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
-          restore-keys: |
-            vcpkg-cache-${{ runner.os }}-
-
-      - name: Set vcpkg binary source env
-        shell: bash
-        run: echo "VCPKG_BINARY_SOURCES=clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite" >> $GITHUB_ENV
-
-      - name: Clone vcpkg
-        shell: bash
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          git checkout e140b1fde236eb682b0d47f905e65008a191800f
-
-      - name: Bootstrap vcpkg
-        shell: bash
-        run: |
-          ./vcpkg/bootstrap-vcpkg.sh
+          vcpkg-ref: e140b1fde236eb682b0d47f905e65008a191800f
 
       - name: Configure CMake with vcpkg
         shell: bash
