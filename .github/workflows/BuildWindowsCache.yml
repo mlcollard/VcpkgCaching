@@ -1,0 +1,21 @@
+name: CI
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: windows-latest # or ubuntu-latest, macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: lukka/run-vcpkg@v14
+        with:
+          cache: true
+          triplet: x64-windows
+
+      - name: Configure CMake with release-only triplet and vcpkg
+        run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+      - name: Build
+        run: cmake --build build --config Release
