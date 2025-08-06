@@ -1,4 +1,4 @@
-name: CI
+name: CICache
 
 on: workflow_dispatch
 
@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: lukka/run-vcpkg@v14
+      - uses: lukka/run-vcpkg@v11
         with:
           cache: true
           triplet: x64-windows
